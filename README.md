@@ -6,19 +6,20 @@ A hands-on IT support, systems administration, and security lab portfolio. This 
 
 | Area | Status | Scope |
 | --- | --- | --- |
-| [Enterprise IT Support](enterprise-it-support/) | In progress | Windows Server 2025 lab setup and AD DS role installation |
+| [Enterprise IT Support](enterprise-it-support/) | In progress | Windows Server 2025 lab; first domain controller promoted; DNS and client validation pending |
 | [Linux Administration](linux-administration/) | Planned | Linux administration exercises and documentation |
 | [SOC / SIEM Lab](soc-siem-lab/) | Planned | Security monitoring and investigation exercises |
 
 ## Verified lab setup
 
-The enterprise IT support lab currently has a Windows Server 2025 Standard Evaluation virtual machine with Desktop Experience in VirtualBox. The server is named **DC01**. Its NAT adapter receives **10.0.2.15** through DHCP, and its internal **Ethernet 2** adapter is configured as **192.168.100.10/24**. The **Active Directory Domain Services (AD DS)** server role is installed.
+VirtualBox runs **DC01**, a Windows Server 2025 Standard Evaluation (Desktop Experience) VM with **4 GB RAM**, **2 CPUs**, and a **60 GB dynamic VDI**. Its NAT adapter has **10.0.2.15**; internal **Ethernet 2** has **192.168.100.10/24**. The AD DS role is installed, and DC01 was promoted into the **corp.example.test** forest. The user confirmed domain sign-in and running NTDS, DNS, and Netlogon services.
 
-**DC01 has not yet been promoted to a domain controller.** DNS configuration and domain controller promotion are planned. A Windows 11 client, Linux administration work, and SOC/SIEM work are also planned; no completion is claimed for those items.
+The exact AD domain/controller outputs, DNS records, multihomed DNS behavior, forwarding, and Windows 11 domain join remain to be verified. See the [dated progress log](enterprise-it-support/PROGRESS.md).
 
 ## Repository layout
 
 - [`enterprise-it-support/`](enterprise-it-support/) — Windows Server lab notes and future evidence.
+  - [`PROGRESS.md`](enterprise-it-support/PROGRESS.md) — dated checkpoints and next verification commands.
   - [`docs/`](enterprise-it-support/docs/) — configuration notes and procedures.
   - [`screenshots/`](enterprise-it-support/screenshots/) — future redacted screenshots.
   - [`diagrams/`](enterprise-it-support/diagrams/) — future architecture diagrams.
