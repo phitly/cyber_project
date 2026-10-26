@@ -7,7 +7,7 @@ A hands-on IT support, systems administration, and security lab portfolio. This 
 | Area | Status | Scope |
 | --- | --- | --- |
 | [Enterprise IT Support](enterprise-it-support/) | In progress | Windows Server 2025 lab; first domain controller promoted; DC DNS checks passed; client join pending |
-| [Linux Administration](linux-administration/) | Planned | Linux administration exercises and documentation |
+| [Linux Administration](linux-administration/) | In progress — Phase 1 complete | Ubuntu Server VM, networking, SSH key login, and package updates; [progress log](linux-administration/PROGRESS.md) |
 | [SOC / SIEM Lab](soc-siem-lab/) | Planned | Security monitoring and investigation exercises |
 
 ## Verified lab setup
@@ -24,7 +24,7 @@ AD domain and controller identity, services, AD locator SRV, the internal DC01 h
   - [`screenshots/`](enterprise-it-support/screenshots/) — future redacted screenshots.
   - [`diagrams/`](enterprise-it-support/diagrams/) — future architecture diagrams.
   - [`powershell/`](enterprise-it-support/powershell/) — future PowerShell scripts.
-- [`linux-administration/`](linux-administration/) — planned Linux work.
+- [`linux-administration/`](linux-administration/) — Linux Systems Administration & Troubleshooting Lab; [Phase 1 progress](linux-administration/PROGRESS.md).
 - [`soc-siem-lab/`](soc-siem-lab/) — planned SOC/SIEM work.
 
 ## Documentation standard
