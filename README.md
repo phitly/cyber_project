@@ -6,7 +6,7 @@ A hands-on IT support, systems administration, and security lab portfolio. This 
 
 | Area | Status | Scope |
 | --- | --- | --- |
-| [Enterprise IT Support](enterprise-it-support/) | In progress | Windows Server 2025 lab; first domain controller promoted; DNS and client validation pending |
+| [Enterprise IT Support](enterprise-it-support/) | In progress | Windows Server 2025 lab; first domain controller promoted; DC DNS checks passed; client join pending |
 | [Linux Administration](linux-administration/) | Planned | Linux administration exercises and documentation |
 | [SOC / SIEM Lab](soc-siem-lab/) | Planned | Security monitoring and investigation exercises |
 
@@ -14,7 +14,7 @@ A hands-on IT support, systems administration, and security lab portfolio. This 
 
 VirtualBox runs **DC01**, a Windows Server 2025 Standard Evaluation (Desktop Experience) VM with **4 GB RAM**, **2 CPUs**, and a **60 GB dynamic VDI**. Its NAT adapter has **10.0.2.15**; internal **Ethernet 2** has **192.168.100.10/24**. The AD DS role is installed, and DC01 was promoted into the **corp.example.test** forest. The user confirmed domain sign-in and running NTDS, DNS, and Netlogon services.
 
-The exact AD domain/controller outputs, DNS records, multihomed DNS behavior, forwarding, and Windows 11 domain join remain to be verified. See the [dated progress log](enterprise-it-support/PROGRESS.md).
+AD domain and controller identity, services, AD locator SRV, the internal DC01 host record, and external DNS resolution were checked. The unwanted NAT A record was removed; persistence after a later registration cycle and the Windows 11 domain join remain pending. See the [dated progress log](enterprise-it-support/PROGRESS.md).
 
 ## Repository layout
 

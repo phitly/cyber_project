@@ -13,9 +13,10 @@ See the [dated progress log](../PROGRESS.md) for checkpoints, exact verification
 | Internal adapter | Ethernet 2, Enterprise-Lab, 192.168.100.10/24, no gateway; DNS registration enabled |
 | DNS client | Both interfaces point to 192.168.100.10 |
 | AD DS | Role installed; new corp.example.test forest, CORP NetBIOS; promoted and restarted |
-| Domain services | Domain sign-in confirmed; user reports NTDS, DNS, and Netlogon running |
+| Domain services | Domain sign-in confirmed; NTDS, DNS, and Netlogon observed running |
+| DNS checks | AD locator SRV present; DC01 host A record and domain/GC A records return 192.168.100.10 after unwanted NAT A record removal; external lookup succeeds |
 | Guest Additions | Installed; clipboard working |
 
 ## Pending verification and work
 
-Actual AD domain/controller command output, DNS A/SRV records, multihomed DNS registration and listening address, forwarding, Windows 11 domain join, and OUs/users/groups/GPOs. Record sanitized output before marking these complete.
+Recheck that the unwanted NAT A record stays absent after a later registration cycle. Remaining AD properties, the specific external DNS resolution path, Windows 11 domain join, and OUs/users/groups/GPOs are not yet documented as complete.

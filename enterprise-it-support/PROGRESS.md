@@ -19,40 +19,30 @@ This log records the lab state reported and confirmed through 2026-10-26. **Veri
 - Both interfaces use **192.168.100.10** as their DNS client address. DNS registration is disabled on the NAT interface and enabled on the internal interface.
 - Installed the **Active Directory Domain Services (AD DS)** server role.
 
-### 2026-10-26 — Phase 3: first domain controller (verified progress)
+### 2026-10-26 — Phase 3: first domain controller (verified)
 
-- Promoted DC01 into a new forest, **corp.example.test**, with NetBIOS name **CORP**; DNS server and Global Catalog were selected.
-- DC01 restarted and the user signed in to the domain.
-- The user confirmed that the **NTDS**, **DNS**, and **Netlogon** services are running. Exact `Get-Service` output was not retained in this log.
+- Promoted DC01 into a new forest, **corp.example.test**, with NetBIOS name **CORP**; DNS server and Global Catalog were selected. DC01 restarted and the user signed in to the domain.
+- Observed `Get-ADDomain | Select-Object DNSRoot,NetBIOSName`: `corp.example.test`, `CORP`.
+- Observed `Get-ADDomainController | Select-Object HostName,IPv4Address,IsGlobalCatalog`: `DC01.corp.example.test`, `192.168.100.10`, `True`.
+- Observed `Get-Service NTDS,DNS,Netlogon | Select-Object Name,Status`: all three **Running**.
+- `Resolve-DnsName _ldap._tcp.dc._msdcs.corp.example.test -Server 192.168.100.10 -Type SRV` returned `dc01.corp.example.test` on port **389**. The `corp.example.test` and `gc._msdcs.corp.example.test` A lookups both returned **192.168.100.10**.
+- Found two `DC01` host A records: **192.168.100.10** and unwanted NAT address **10.0.2.15**. `Get-DnsClient` confirmed registration disabled on Ethernet (NAT) and enabled on Ethernet 2. The user confirmed DNS Manager's server **Interfaces** and the zone **Name Servers** list use **192.168.100.10** only; the unwanted NAT A record was removed. A later `Get-DnsServerResourceRecord -ZoneName corp.example.test -Name DC01 -RRType A` listed only **192.168.100.10**, and `nslookup dc01.corp.example.test 192.168.100.10` returned only **192.168.100.10**. An earlier `Resolve-DnsName` result still showed both addresses; whether that was cached was not established.
+- `Get-DnsServerForwarder` reported **fd17:625c:f037:2::3** and `UseRootHint: True`. `Resolve-DnsName example.com -Server 192.168.100.10` returned public A and AAAA answers. External name resolution works; these outputs alone do not establish whether the forwarder or root hints supplied the answer.
 
-## Phase 3 verification still pending
+## Remaining checks before the Windows 11 domain join
 
-The promotion and sign-in are confirmed, but the following outputs and checks have not been supplied. Do not mark them complete until observed on DC01 and documented with sanitized evidence.
-
-1. Capture the actual domain and domain-controller properties:
+1. Recheck the DC01 host record after a restart or later registration cycle, using both authoritative record inspection and a direct DNS query:
    ```powershell
-   Get-ADDomain | Select-Object DNSRoot, NetBIOSName, Forest, DomainMode, PDCEmulator
-   Get-ADDomainController -Identity DC01 | Select-Object HostName, Domain, Forest, IPv4Address, IsGlobalCatalog
-   Get-Service NTDS, DNS, Netlogon | Select-Object Name, Status
+   Get-DnsServerResourceRecord -ZoneName corp.example.test -Name DC01 -RRType A
+   nslookup dc01.corp.example.test 192.168.100.10
    ```
-2. Verify that DC01 resolves on the internal address and that the AD locator SRV record exists:
+   Both should show **192.168.100.10** only.
+2. If a complete AD inventory is needed, capture the properties not included in the selections above:
    ```powershell
-   Resolve-DnsName dc01.corp.example.test -Server 192.168.100.10 -Type A
-   Resolve-DnsName _ldap._tcp.dc._msdcs.corp.example.test -Server 192.168.100.10 -Type SRV
+   Get-ADDomain | Select-Object Forest, DomainMode, PDCEmulator
+   Get-ADDomainController -Identity DC01 | Select-Object Domain, Forest
    ```
-   The DC01 A record should point to **192.168.100.10**. Investigate any **10.0.2.15** A record for DC01.
-3. Check the multihomed DNS configuration: confirm registration is disabled on Ethernet and enabled on Ethernet 2, and review which local addresses the DNS server listens on:
-   ```powershell
-   Get-DnsClient | Select-Object InterfaceAlias, RegisterThisConnectionsAddress
-   Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object InterfaceAlias, ServerAddresses
-   Get-DnsServerSetting -All | Select-Object ListenAddresses
-   ```
-   Confirm internal clients can query **192.168.100.10**; review the DNS server's **Interfaces** tab if the listening-address output needs clarification.
-4. Inspect DNS forwarding and test external resolution through DC01 before recording it as configured:
-   ```powershell
-   Get-DnsServerForwarder
-   Resolve-DnsName example.com -Server 192.168.100.10
-   ```
+3. Confirm the Windows 11 client can reach **192.168.100.10** and resolve the DC locator SRV record through that DNS server. The client join and OUs, users, groups, and GPOs remain pending.
 
 ## Next phases
 
