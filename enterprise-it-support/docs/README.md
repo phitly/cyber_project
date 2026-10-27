@@ -2,7 +2,7 @@
 
 See the [dated progress log](../PROGRESS.md) for checkpoints, exact verification commands, and next steps.
 
-## Verified configuration through 2026-10-26
+## Verified configuration through 2026-10-27
 
 | Component | Current state |
 | --- | --- |
@@ -16,7 +16,8 @@ See the [dated progress log](../PROGRESS.md) for checkpoints, exact verification
 | Domain services | Domain sign-in confirmed; NTDS, DNS, and Netlogon observed running |
 | DNS checks | AD locator SRV present; DC01 host A record and domain/GC A records return 192.168.100.10 after unwanted NAT A record removal; external lookup succeeds |
 | Guest Additions | Installed; clipboard working |
+| Post-restart checks | DC01 passed Advertising; authoritative DC01 A lookup returned only 192.168.100.10; NETLOGON and SYSVOL shares were present; Windows Update handled per user report |
 
 ## Pending verification and work
 
-Recheck that the unwanted NAT A record stays absent after a later registration cycle. Remaining AD properties, the specific external DNS resolution path, Windows 11 domain join, and OUs/users/groups/GPOs are not yet documented as complete.
+`dcdiag /test:DNS /DnsRecordRegistration` passed its main DNS test with warnings for the intentionally unregistered DHCP NAT adapter. Remaining AD properties, the specific external DNS resolution path, Windows 11 domain join, and OUs/users/groups/GPOs are not yet documented as complete.

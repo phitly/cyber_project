@@ -1,6 +1,6 @@
 # Enterprise IT Support & Hybrid Identity Lab — Progress Log
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 This log records the lab state reported and confirmed through 2026-10-26. **Verified** means the user confirmed the configuration or result during setup; it does not imply that command output or screenshots have been committed. **Pending** means a result has not yet been supplied or a task has not yet been completed. No passwords, recovery keys, tokens, or other secrets are recorded here.
 
@@ -29,20 +29,22 @@ This log records the lab state reported and confirmed through 2026-10-26. **Veri
 - Found two `DC01` host A records: **192.168.100.10** and unwanted NAT address **10.0.2.15**. `Get-DnsClient` confirmed registration disabled on Ethernet (NAT) and enabled on Ethernet 2. The user confirmed DNS Manager's server **Interfaces** and the zone **Name Servers** list use **192.168.100.10** only; the unwanted NAT A record was removed. A later `Get-DnsServerResourceRecord -ZoneName corp.example.test -Name DC01 -RRType A` listed only **192.168.100.10**, and `nslookup dc01.corp.example.test 192.168.100.10` returned only **192.168.100.10**. An earlier `Resolve-DnsName` result still showed both addresses; whether that was cached was not established.
 - `Get-DnsServerForwarder` reported **fd17:625c:f037:2::3** and `UseRootHint: True`. `Resolve-DnsName example.com -Server 192.168.100.10` returned public A and AAAA answers. External name resolution works; these outputs alone do not establish whether the forwarder or root hints supplied the answer.
 
+### 2026-10-27 — Post-restart verification (verified)
+
+- DC01 restarted after Windows Update; the user reported the update step was handled.
+- `dcdiag /test:Advertising` passed after restart.
+- `nslookup dc01.corp.example.test 192.168.100.10` returned only **192.168.100.10** after restart. An earlier `Resolve-DnsName` response included **10.0.2.15**, but the refreshed authoritative zone view and direct DNS query did not; the source of the extra local resolution result was not established.
+- `net share` showed both **NETLOGON** and **SYSVOL**.
+- `dcdiag /test:DNS /DnsRecordRegistration` passed its main DNS test. It warned about the DHCP NAT adapter and missing A registrations on that adapter; DNS registration is intentionally disabled there.
+
 ## Remaining checks before the Windows 11 domain join
 
-1. Recheck the DC01 host record after a restart or later registration cycle, using both authoritative record inspection and a direct DNS query:
-   ```powershell
-   Get-DnsServerResourceRecord -ZoneName corp.example.test -Name DC01 -RRType A
-   nslookup dc01.corp.example.test 192.168.100.10
-   ```
-   Both should show **192.168.100.10** only.
-2. If a complete AD inventory is needed, capture the properties not included in the selections above:
+1. If a complete AD inventory is needed, capture the properties not included in the selections above:
    ```powershell
    Get-ADDomain | Select-Object Forest, DomainMode, PDCEmulator
    Get-ADDomainController -Identity DC01 | Select-Object Domain, Forest
    ```
-3. Confirm the Windows 11 client can reach **192.168.100.10** and resolve the DC locator SRV record through that DNS server. The client join and OUs, users, groups, and GPOs remain pending.
+2. Confirm the Windows 11 client can reach **192.168.100.10** and resolve the DC locator SRV record through that DNS server. The client join and OUs, users, groups, and GPOs remain pending.
 
 ## Next phases
 

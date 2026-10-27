@@ -14,7 +14,7 @@ A hands-on IT support, systems administration, and security lab portfolio. This 
 
 VirtualBox runs **DC01**, a Windows Server 2025 Standard Evaluation (Desktop Experience) VM with **4 GB RAM**, **2 CPUs**, and a **60 GB dynamic VDI**. Its NAT adapter has **10.0.2.15**; internal **Ethernet 2** has **192.168.100.10/24**. The AD DS role is installed, and DC01 was promoted into the **corp.example.test** forest. The user confirmed domain sign-in and running NTDS, DNS, and Netlogon services.
 
-AD domain and controller identity, services, AD locator SRV, the internal DC01 host record, and external DNS resolution were checked. The unwanted NAT A record was removed; persistence after a later registration cycle and the Windows 11 domain join remain pending. See the [dated progress log](enterprise-it-support/PROGRESS.md).
+AD domain and controller identity, services, AD locator SRV, the internal DC01 host record, and external DNS resolution were checked. After a restart on 2026-10-27, DC01 passed the Advertising test; a direct DNS query returned only 192.168.100.10; and NETLOGON and SYSVOL shares were present. The user reported Windows Update was handled. The Windows 11 domain join remains pending. See the [dated progress log](enterprise-it-support/PROGRESS.md).
 
 ## Repository layout
 
